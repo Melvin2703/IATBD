@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Chirp;
+use App\Models\Animal;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
@@ -15,9 +17,10 @@ class ChirpController extends Controller
      */
     public function index(): View
     {
-        return view('chirps.index', [
-            'chirps' => Chirp::with('user')->latest()->get(),
-        ]);
+        $animals = Animal::all();
+        $chirps = Chirp::with('user')->latest()->get();
+    
+        return view('chirps.index', compact('chirps', 'animals'));
     }
 
     /**
@@ -31,16 +34,35 @@ class ChirpController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
-    {
+   
+    public function store(Request $request)
+    {       
         $validated = $request->validate([
-            'message' => 'required|string|max:255',
+            'message' => 'required|string|max:10',
+            'animal' => 'required|string',
+            'description' => 'required|string',
+        ]);
+        
+        Chirp::create([
+            'message' => $request->input('message'),
+            'animal' => $request->input('animal'),
+            'description' => $request->input('description'),
+            'user_id' => Auth()->user()->id,
         ]);
 
-        $request->user()->chirps()->create($validated);
-
-        return redirect(route('chirps.index'));
+        return redirect(route('chirps.index')); // Redirect to wherever you want after storing the chirp
     }
+
+    // public function store(Request $request): RedirectResponse
+    // {
+    //     $validated = $request->validate([
+    //         'message' => 'required|string|max:255',
+    //     ]);
+
+    //     $request->user()->chirps()->create($validated);
+
+    //     return redirect(route('chirps.index'));
+    // }
 
     /**
      * Display the specified resource.
@@ -55,10 +77,13 @@ class ChirpController extends Controller
      */
     public function edit(Chirp $chirp): View
     {
+        $animals = Animal::all();
         $this->authorize('update', $chirp);
- 
+    
         return view('chirps.edit', [
             'chirp' => $chirp,
+            'animals' => $animals, 
+            'description' => $chirp->description,
         ]);
     }
 
@@ -71,6 +96,8 @@ class ChirpController extends Controller
  
         $validated = $request->validate([
             'message' => 'required|string|max:255',
+            'animal' => 'required|string',
+            'description' => 'required|string',
         ]);
  
         $chirp->update($validated);
