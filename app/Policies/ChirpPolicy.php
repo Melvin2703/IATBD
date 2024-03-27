@@ -45,6 +45,9 @@ class ChirpPolicy
      */
     public function delete(User $user, Chirp $chirp): bool
     {
+        if($user->is_admin == 1){
+            return true;
+        }
         return $this->update($user, $chirp);
     }
 

@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Animal extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'id',
+        'name'];
 }

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('message');
             $table->string('animal');
             $table->string('description');
+            $table->string('image')->nullable();
+            $table->string('video')->nullable();
             $table->timestamps();
         });
     }

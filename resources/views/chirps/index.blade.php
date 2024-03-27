@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-        <form method="POST" action="{{ route('chirps.store') }}"> 
+        <form method="POST" action="{{ route('chirps.store') }}" enctype="multipart/form-data"> 
             @csrf
             <div>
                 <x-input-label class="mt-4 text-lg text-gray-900" for="animal" :value="__('Wat voor een soort dier is het?')"/>
@@ -16,6 +16,10 @@
                 placeholder="{{ __('Beschrijf uw huisdier in een aantal woorden') }}"
                 class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-2"
             >{{ old('message') }}</textarea>
+            <x-input-label class="mt-2 text-lg text-gray-900" for="photo" :value="__('Voeg hier een foto van uw huisdier toe.')"/>
+            <input type="file" class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-2" name="image" accept="jpeg,png,jpg,gif">
+            <x-input-label class="mt-2 text-lg text-gray-900" for="video" :value="__('Voeg hier een video van uw huis toe.')"/>
+            <input type="file" class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-2" name="video">
             <x-input-error :messages="$errors->get('message')" class="mt-2" />
             <x-primary-button class="mt-4">{{ __('Post') }}</x-primary-button>
         </form>
@@ -61,6 +65,16 @@
                         <p class="mt-2 text-lg text-gray-900">Soort huisdier: {{ $chirp->animal }}</p>
                         <p class="text-lg text-gray-900">Naam: {{ $chirp->message }}</p>
                         <p class="text-lg text-gray-900">Beschrijving: {{ $chirp->description }}</p>
+                        @unless($chirp->image == null)
+                            <img class="mt-2" src="{{ asset('storage/images/' . $chirp->image) }}" alt="Animal Image">
+                        @endunless
+                        @unless($chirp->video == null)
+                            <video class="mt-2" controls>
+                                <source src="{{ asset('storage/video/' . $chirp->video) }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        @endunless
+                        <x-primary-button class="mt-4">{{ __('Reply') }}</x-primary-button>
                     </div>
                 </div>
             @endforeach
