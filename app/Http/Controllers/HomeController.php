@@ -11,6 +11,6 @@ class HomeController extends Controller
     public function getData()
     {
         $animals = Animal::all();
-        return view('chirps.index', compact('animals'));
+        return view('posts.index', compact('animals'));
     }
 }

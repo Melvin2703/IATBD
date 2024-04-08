@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\View\View;
-use App\Models\Chirp;
+use App\Models\Post;
 
 class UserController extends Controller
 {
     public function index(): View {
         return view('admin.index', [
             'users' => User::all(),
-            'chirps' => Chirp::with('user')->latest()->get(),
+            'posts' => Post::with('user')->latest()->get(),
         ]);
     }
 

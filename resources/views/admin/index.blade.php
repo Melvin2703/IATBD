@@ -5,8 +5,8 @@
         <h1 class="text-3xl text-center p-6">All current users</h1>
         <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
             @foreach($users as $user)
-                <div class="bg-white rounded-lg p-4 mb-4 shadow-md border-2 flex items-center w-full">
-                    <div class="card-body">  
+                <div class="mt-6 bg-white shadow-sm rounded-lg p-6">
+                    <div class="card-body flex-1">  
                         <h5 class="card-title text-xl font-bold">{{ $user->name }} </h5>
                         <p class="card-text text-gray-600">{{ $user->email }}</p>
                         <div class="mt-4 flex">
@@ -30,21 +30,22 @@
             @endforeach
         </div>
 
-        <h1 class="text-3xl text-center p-6">All chirps</h1>
+        <h1 class="text-3xl text-center p-6">All posts</h1>
         <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-            @foreach($chirps as $chirp)
-            <div class="bg-white rounded-lg p-4 mb-4 shadow-md border-2 flex items-center w-full">
-                <div>
-                    <div class="flex items-center mb-2">
-                        @if(auth()->user()->image)
-                            <div class="rounded-full h-8 w-8 bg-gray-300 mr-2">
-                                <img src="{{ auth()->user()->image }}" alt="User Image" class="rounded-full h-8 w-8">
-                            </div>
-                        @else
-                            <div class="rounded-full h-8 w-8 bg-gray-300 mr-2"></div>
-                        @endif
-                        <h4 class="text-lg font-semibold">{{ $chirp->dog_name }}</h4>
-                        <span class="text-gray-400 text-sm mx-2">{{ $chirp->created_at->diffForHumans(['short' => true]) }}</span>
+        @foreach ($posts as $post)
+            <div class="mt-6 bg-white shadow-sm rounded-lg p-6">
+                <div class="flex-1">
+                    <div class="flex justify-between items-center py-1 border-b-2 border-grey">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 -scale-x-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <div>
+                            <span class="text-gray-800">{{ $post->user->name }}</span>
+                            <small class="ml-2 text-sm text-gray-600">{{ $post->created_at->format('j M Y, g:i a') }}</small>
+                            @unless ($post->created_at->eq($post->updated_at))
+                                <small class="text-sm text-gray-600"> &middot; {{ __('edited') }}</small>
+                            @endunless
+                        </div>
                             <x-dropdown>
                                 <x-slot name="trigger">
                                     <button>
@@ -54,34 +55,34 @@
                                     </button>
                                 </x-slot>
                                 <x-slot name="content">
-                                    <x-dropdown-link :href="route('chirps.edit', $chirp)">
+                                    <x-dropdown-link :href="route('posts.edit', $post)">
                                         {{ __('Edit') }}
                                     </x-dropdown-link>
-                                    <form method="POST" action="{{ route('chirps.destroy', $chirp) }}">
+                                    <form method="POST" action="{{ route('posts.destroy', $post) }}">
                                         @csrf
                                         @method('delete')
-                                        <x-dropdown-link :href="route('chirps.destroy', $chirp)" onclick="event.preventDefault(); this.closest('form').submit();">
+                                        <x-dropdown-link :href="route('posts.destroy', $post)" onclick="event.preventDefault(); this.closest('form').submit();">
                                             {{ __('Delete') }}
                                         </x-dropdown-link>
                                     </form>
                                 </x-slot>
                             </x-dropdown>
                     </div>
-                    <p class="mt-2 text-lg text-gray-900">Soort huisdier: {{ $chirp->animal }}</p>
-                    <p class="text-lg text-gray-900">Naam: {{ $chirp->message }}</p>
-                    <p class="text-lg text-gray-900">Beschrijving: {{ $chirp->description }}</p>
-                    @unless($chirp->image == null)
-                        <img class="mt-2" src="{{ asset('storage/images/' . $chirp->image) }}" alt="Animal Image">
+                    <p class="mt-2 text-lg text-gray-900">Soort huisdier: {{ $post->animal }}</p>
+                    <p class="text-lg text-gray-900">Naam: {{ $post->message }}</p>
+                    <p class="text-lg text-gray-900">Beschrijving: {{ $post->description }}</p>
+                    @unless($post->image == null)
+                        <img class="mt-2" src="{{ asset('storage/images/' . $post->image) }}" alt="Animal Image">
                     @endunless
-                    @unless($chirp->video == null)
-                    <video class="mt-2" controls>
-                        <source src="{{ asset('storage/video/' . $chirp->video) }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
+                    @unless($post->video == null)
+                        <video class="mt-2" controls>
+                            <source src="{{ asset('storage/video/' . $post->video) }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
                     @endunless
                 </div>
             </div>
-            @endforeach
-        </div>
+        @endforeach
+    </div>
     @endif
 </x-app-layout>

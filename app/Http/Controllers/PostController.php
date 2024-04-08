@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
-use App\Models\Chirp;
+use App\Models\Post;
 use App\Models\Animal;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 
-class ChirpController extends Controller
+class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,10 +19,10 @@ class ChirpController extends Controller
 public function index(): View
 {
     $animals = Animal::all();
-    $chirps = Chirp::with('user')->latest()->get();
+    $posts = Post::with('user')->latest()->get();
 
-    return view('chirps.index', compact('chirps', 'animals'))
-                ->with('dashboard', $chirps); // Voeg de variabele chirpsForDashboard toe aan de view voor dashboard.blade.php
+    return view('posts.index', compact('posts', 'animals'))
+                ->with('dashboard', $posts); // Voeg de variabele postsForDashboard toe aan de view voor dashboard.blade.php
 }
     /**
      * Show the form for creating a new resource.
@@ -58,7 +58,7 @@ public function index(): View
             $video->storeAs('public/video', $videoName); // Sla de afbeelding op in de opslag (bijv. public/images)
         }
      
-         Chirp::create([
+         Post::create([
              'message' => $request->input('message'),
              'animal' => $request->input('animal'),
              'description' => $request->input('description'),
@@ -67,13 +67,13 @@ public function index(): View
              'video' => $videoName ?? null,
          ]);
      
-         return redirect(route('chirps.index')); // Redirect naar waar je maar wilt na het opslaan van de chirp
+         return redirect(route('posts.index')); // Redirect naar waar je maar wilt na het opslaan van de post
      }
 
     /**
      * Display the specified resource.
      */
-    public function show(Chirp $chirp)
+    public function show(post $post)
     {
         //
     }
@@ -81,25 +81,25 @@ public function index(): View
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Chirp $chirp): View
+    public function edit(Post $post): View
     {
         $animals = Animal::all();
-        $this->authorize('update', $chirp);
+        $this->authorize('update', $post);
     
-        return view('chirps.edit', [
-            'chirp' => $chirp,
+        return view('posts.edit', [
+            'post' => $post,
             'animals' => $animals, 
-            'description' => $chirp->description,
-            'image' => $chirp->image,
+            'description' => $post->description,
+            'image' => $post->image,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Chirp $chirp): RedirectResponse
+    public function update(Request $request, Post $post): RedirectResponse
     {
-        $this->authorize('update', $chirp);
+        $this->authorize('update', $post);
  
         $validated = $request->validate([
             'message' => 'required|string|max:255',
@@ -109,7 +109,7 @@ public function index(): View
         ]);
 
         if ($request->hasFile('image')) {
-            Storage::delete('public/images/' . $chirp->image);
+            Storage::delete('public/images/' . $post->image);
             $image = $request->file('image');
             $imageName = time().'.'.$image->extension(); // Genereer een unieke naam voor de afbeelding
     
@@ -121,7 +121,7 @@ public function index(): View
         }
 
         if ($request->hasFile('video')) {
-            Storage::delete('public/video/' . $chirp->video);
+            Storage::delete('public/video/' . $post->video);
             $video = $request->file('video');
             $videoName = time().'.'.$video->extension(); // Genereer een unieke naam voor de afbeelding
             
@@ -130,28 +130,28 @@ public function index(): View
             $video->storeAs('public/video', $videoName);
         }
  
-        $chirp->update($validated);
+        $post->update($validated);
  
-        return redirect(route('chirps.index'));
+        return redirect(route('posts.index'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Chirp $chirp): RedirectResponse
+    public function destroy(Post $post): RedirectResponse
     {
-        $this->authorize('delete', $chirp);
+        $this->authorize('delete', $post);
  
-        if ($chirp->image) {
-            Storage::delete('public/images/' . $chirp->image);
+        if ($post->image) {
+            Storage::delete('public/images/' . $post->image);
         }
 
-        if ($chirp->video) {
-            Storage::delete('public/video/' . $chirp->video);
+        if ($post->video) {
+            Storage::delete('public/video/' . $post->video);
         }
 
-        $chirp->delete();
+        $post->delete();
  
-        return redirect(route('chirps.index'));
+        return redirect(route('posts.index'));
     }
 }

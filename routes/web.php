@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ChirpController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -29,7 +29,7 @@ Route::group(['middleware' => 'block.blocked'], function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
-    Route::resource('chirps', ChirpController::class)
+    Route::resource('posts', PostController::class)
         ->only(['index', 'store', 'edit', 'update', 'destroy'])
         ->middleware(['auth', 'verified']);
     
@@ -38,14 +38,14 @@ Route::group(['middleware' => 'block.blocked'], function () {
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/admin', [UserController::class, 'index'])->name('admin.index');
+        Route::get('/admin/{user}/block', [UserController::class, 'block'])->name('admin.block');
+        Route::get('/admin/{user}/admin', [UserController::class, 'admin'])->name('admin.admin');
+    });
 });
 
 Route::view('/blocked', 'blocked')->name('blocked_page');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/admin', [UserController::class, 'index'])->name('admin.index');
-    Route::get('/admin/{user}/block', [UserController::class, 'block'])->name('admin.block');
-    Route::get('/admin/{user}/admin', [UserController::class, 'admin'])->name('admin.admin');
-});
 
 require __DIR__.'/auth.php';

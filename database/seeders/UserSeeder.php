@@ -21,10 +21,18 @@ class UserSeeder extends Seeder
         // Create a default user
         User::create([
             'name' => 'Melvin van Vliet',
-            'email' => 'melvinvanvliet@hotmail.com',
-            'password' => Hash::make('admin'),
+            'email' => 'melvin@melvin.melvin',
+            'password' => Hash::make('melvin'),
             'is_blocked'=> 0,
             'is_admin' => 1,
+        ]);
+
+        User::create([
+            'name' => 'Tim Tim',
+            'email' => 'tim@tim.tim',
+            'password' => Hash::make('tim'),
+            'is_blocked'=> 0,
+            'is_admin' => 0,
         ]);
     }
 }
