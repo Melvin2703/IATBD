@@ -83,6 +83,7 @@
                 </div>
             </div>
         @endforeach
+        <h1 class="text-3xl text-center p-6">Totale aanvragen </h1>
     </div>
     @endif
 </x-app-layout>

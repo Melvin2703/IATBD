@@ -94,18 +94,43 @@
                     <p class="mt-2 text-lg text-gray-900">Soort huisdier: {{ $post->animal }}</p>
                     <p class="text-lg text-gray-900">Naam: {{ $post->message }}</p>
                     <p class="text-lg text-gray-900">Beschrijving: {{ $post->description }}</p>
-                    @unless($post->image == null)
-                        <img class="mt-2" src="{{ asset('storage/images/' . $post->image) }}" alt="Animal Image">
-                    @endunless
-                    @unless($post->video == null)
-                        <video class="mt-2" controls>
-                            <source src="{{ asset('storage/video/' . $post->video) }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    @endunless
-                    @if ($post->user->isnot(auth()->user()))
-                        <x-primary-button class="mt-4">{{ __('Aanvragen') }}</x-primary-button>
-                    @endif
+                    <div class="flex-1 justify-center items-center">
+                        @unless($post->image == null)
+                            <img class="mt-2 w-full" src="{{ asset('storage/images/' . $post->image) }}" alt="Animal Image">
+                        @endunless
+                        @unless($post->video == null)
+                            <video class="mt-2 w-full" controls>
+                                <source src="{{ asset('storage/video/' . $post->video) }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        @endunless
+                        @if ($post->user->isnot(auth()->user()))
+                            @php
+                                $requestExists = false;
+                                // Hieronder veronderstellen we dat je een methode hebt om te controleren of een verzoek al bestaat
+                                // Je moet dit aanpassen aan de logica van je applicatie
+                                if (auth()->check()) {
+                                    $requestExists = App\Models\Aanvraag::where('post_id', $post->id)
+                                                                        ->where('user_id_request', auth()->user()->id)
+                                                                        ->exists();
+                                }
+                            @endphp
+                            @if ($requestExists)
+                                <form method="POST" action="{{ route('requests.destroy', ['user_id_request' => auth()->user()->id, 'post_id' => $post->id]) }}">
+                                    @csrf
+                                    @method('delete')
+                                    <x-primary-button class="mt-4" onclick="event.preventDefault(); this.closest('form').submit();">{{ __('Request Sent') }}</x-primary-button>
+                                </form>
+                            @endif
+                            @if (!$requestExists)
+                                <form method="POST" action="{{ route('requests.store', ['user_id_request' => auth()->user()->id, 'user_id_post' => $post->user_id, 'post_id' => $post->id]) }}">
+                                    @csrf
+                                    <!-- Your form fields here -->
+                                    <x-primary-button class="mt-4">{{ __('Submit Request') }}</x-primary-button>
+                                </form>
+                            @endif
+                        @endif
+                    </div>
                 </div>
             </div>
         @endforeach

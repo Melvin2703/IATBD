@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Aanvraag;
 use Illuminate\View\View;
 use App\Models\Post;
 
@@ -14,6 +15,12 @@ class UserController extends Controller
             'users' => User::all(),
             'posts' => Post::with('user')->latest()->get(),
         ]);
+    }
+
+    public function getRowCount()
+    {
+        $rowCount = Aanvraag::count(); 
+        return view('admin.index', ['rowCount' => $rowCount]);
     }
 
     public function block(User $user) {

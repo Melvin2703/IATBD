@@ -17,9 +17,10 @@ export default {
             colors: {
                 "turquoise-main": "#65CCB8",
                 "turquoise-base": "#CAEFE8",
-                "beige-accent": "#CC8E65",
-                "beige-accent-hover": "#C96A2B",
-                "pink-accent": "#CC65B6",
+                "pink-accent": "#CC8E65",
+                "pink-accent-hover": "#C96A2B",
+                "beige-accent": "#CC65B6",
+                "beige-accent-hover": "#CC3DAD",
                 "fair-pink": "#EEE2DC"
             },
             fontFamily: {

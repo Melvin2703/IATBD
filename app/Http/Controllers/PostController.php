@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Post;
 use App\Models\Animal;
+use App\Models\Aanvraag; 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
@@ -18,11 +19,10 @@ class PostController extends Controller
      */
 public function index(): View
 {
-    $animals = Animal::all();
+    $animals = Animal::All();
     $posts = Post::with('user')->latest()->get();
-
-    return view('posts.index', compact('posts', 'animals'))
-                ->with('dashboard', $posts); // Voeg de variabele postsForDashboard toe aan de view voor dashboard.blade.php
+    $aanvragen = Aanvraag::All();
+    return view('posts.index', ['animals' => $animals, 'posts' => $posts, 'aanvragen' => $aanvragen] ); // Voeg de variabele postsForDashboard toe aan de view voor dashboard.blade.php
 }
     /**
      * Show the form for creating a new resource.

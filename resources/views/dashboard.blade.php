@@ -57,5 +57,12 @@
             @endif
         @endforeach
     <h1 class="text-mossgreen text-3xl text-center p-6">Uw aanvragen</h1>
+    <div>
+        @foreach($aanvragen as $aanvraag)
+            @if ($aanvraag->user_id_request == auth()->user()->id)
+                <p class="mt-2 text-lg text-gray-900">Soort huisdier: {{ $aanvraag->id }}</p>
+            @endif
+        @endforeach
+    </div>
 </div>
 </x-app-layout>
