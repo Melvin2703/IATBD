@@ -11,6 +11,7 @@
                             <h5 class="card-title text-xl font-bold">{{ $user->name }} </h5>
                             <p class="card-text text-gray-600">{{ $user->email }}</p>
                         </div>
+                        @if ($user->id != auth()->user()->id && !$user->is_admin)
                         <div class="mt-4 flex">
                             <div class="mx-4 px-4 py-2 rounded-md">
                                 @if($user->is_blocked)
@@ -27,6 +28,7 @@
                                 @endif
                             </div>
                         </div>
+                        @endif
                     </div>
                 </div>
             @endforeach

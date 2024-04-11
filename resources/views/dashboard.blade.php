@@ -56,7 +56,7 @@
             </div>
             @endif
         @endforeach
-    <h1 class="text-mossgreen text-3xl text-center p-6">Uw aanvragen</h1>
+    <h1 class="text-mossgreen text-3xl text-center p-6">Uw verzonden aanvragen</h1>
     @foreach($aanvragen as $aanvraag)
         @if ($aanvraag->user_id_request == auth()->user()->id)
             <div class="mt-6 bg-turquoise-main shadow-sm rounded-lg p-6">
@@ -70,7 +70,25 @@
                         $user = App\Models\User::find($aanvraag->user_id_post);
                     @endphp
                     @if($user)
-                        <p class="mt-2 text-lg text-gray-900">Aanvraag van: {{ $user->name }}</p>
+                        <p class="mt-2 text-lg text-gray-700">Aanvraag verzonden naar: {{ $user->name }}</p><p class="mt-2 text-lg text-gray-700">Goedgekeurd: {{$aanvraag->accepted }}</p>
+                    @endif
+                </div>
+            </div>
+        @endif
+        <h1 class="text-mossgreen text-3xl text-center p-6">Uw ontvangen aanvragen</h1>
+        @if ($aanvraag->user_id_post == auth()->user()->id)
+            <div class="mt-6 bg-turquoise-main shadow-sm rounded-lg p-6">
+                <div class="flex-1">
+                    <div class="flex justify-between items-center py-1 border-b-2 border-beige-accent">
+                        <div>
+                            <small class="ml-2 text-sm text-gray-700">{{ $aanvraag->created_at->format('j M Y, g:i a') }}</small>
+                        </div>
+                    </div>
+                    @php
+                        $user = App\Models\User::find($aanvraag->user_id_post);
+                    @endphp
+                    @if($user)
+                        <p class="mt-2 text-lg text-gray-700">Aanvraag ontvangen van: {{ $user->name }}</p>
                     @endif
                 </div>
             </div>

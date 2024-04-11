@@ -5,13 +5,13 @@
                 @csrf
                 <div>
                     <x-input-label class="mt-4 text-lg text-grey-700" for="animal" :value="__('Wat voor een soort dier is het?')"/>
-                    <x-input-select :options="$animals" class="block mt-1 w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2"/>
+                    <x-input-select :options="$animals" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2"/>
                 </div>
                 <input
                     name="message"
                     placeholder="{{ __('Wat is de naam van je huisdier?') }}"
                     class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2"
-                >{{ old('message') }}</input>
+                >
                 <textarea
                     name="description"
                     placeholder="{{ __('Beschrijf uw huisdier in een aantal woorden') }}"
@@ -96,19 +96,17 @@
                     <p class="text-lg text-gray-900">Beschrijving: {{ $post->description }}</p>
                     <div class="flex-1 justify-center items-center">
                         @unless($post->image == null)
-                            <img class="mt-2 w-full" src="{{ asset('storage/images/' . $post->image) }}" alt="Animal Image">
+                            <img class="mt-2 w-full" src="{{ asset('storage/images/' . $post->image) }}" alt="Foto van het huisdier">
                         @endunless
                         @unless($post->video == null)
                             <video class="mt-2 w-full" controls>
-                                <source src="{{ asset('storage/video/' . $post->video) }}" type="video/mp4">
+                                <source src="{{ asset('storage/video/' . $post->video) }}"alt="Video van de woning" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         @endunless
                         @if ($post->user->isnot(auth()->user()))
                             @php
                                 $requestExists = false;
-                                // Hieronder veronderstellen we dat je een methode hebt om te controleren of een verzoek al bestaat
-                                // Je moet dit aanpassen aan de logica van je applicatie
                                 if (auth()->check()) {
                                     $requestExists = App\Models\Aanvraag::where('post_id', $post->id)
                                                                         ->where('user_id_request', auth()->user()->id)
@@ -119,14 +117,13 @@
                                 <form method="POST" action="{{ route('requests.destroy', ['user_id_request' => auth()->user()->id, 'post_id' => $post->id]) }}">
                                     @csrf
                                     @method('delete')
-                                    <x-primary-button class="mt-4" onclick="event.preventDefault(); this.closest('form').submit();">{{ __('Request Sent') }}</x-primary-button>
+                                    <x-primary-button class="mt-4" onclick="event.preventDefault(); this.closest('form').submit();">{{ __('Verzoek annuleren') }}</x-primary-button>
                                 </form>
                             @endif
                             @if (!$requestExists)
                                 <form method="POST" action="{{ route('requests.store', ['user_id_request' => auth()->user()->id, 'user_id_post' => $post->user_id, 'post_id' => $post->id]) }}">
                                     @csrf
-                                    <!-- Your form fields here -->
-                                    <x-primary-button class="mt-4">{{ __('Submit Request') }}</x-primary-button>
+                                    <x-primary-button class="mt-4">{{ __('Verzoek verzenden') }}</x-primary-button>
                                 </form>
                             @endif
                         @endif
