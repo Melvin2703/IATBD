@@ -7,8 +7,8 @@
 
         <!-- Registreren -->
         <div>
-            <h3 class="font-semibold text-2xl text-gray-700">Sign In</h3>
-            <p class="text-gray-500">Don't have an account? <a class="underline text-sm text-pink-accent hover:text-pink-accent-hover rounded-md" href="{{ route('register') }}">Sign Up</a></p>
+            <h3 class="font-semibold text-2xl text-gray-700">Inloggen</h3>
+            <p class="text-gray-500">Geen account? <a class="underline text-sm text-pink-accent hover:text-pink-accent-hover rounded-md" href="{{ route('register') }}">Registreren</a></p>
         </div>
 
         <!-- Email Address -->
@@ -20,7 +20,7 @@
 
         <!-- Password -->
         <div class="mt-4 text-gray-700">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="__('Wachtwoord')" />
 
             <x-text-input id="password" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2"
                             type="password"
@@ -34,19 +34,19 @@
         <div class="block mt-4">
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-turquoise-base shadow-sm focus:ring-turquoise-base" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                <span class="ms-2 text-sm text-gray-600">{{ __('Onthoud mij') }}</span>
             </label>
         </div>
 
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
                 <a class="underline text-sm text-pink-accent hover:text-pink-accent-hover rounded-md" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
+                    {{ __('Wachtwoord vergeten?') }}
                 </a>
             @endif
 
             <x-primary-button class="ms-3">
-                {{ __('Log in') }}
+                {{ __('Inloggen') }}
             </x-primary-button>
         </div>
     </form>
