@@ -1,4 +1,5 @@
 <x-app-layout>
+    <script src="{{ asset('js/app.js') }}"></script>
     <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
         <h1 class="text-3xl text-center p-6">Uw posts</h1>
             @foreach($posts as $post)
@@ -84,7 +85,17 @@
                                             $user = App\Models\User::find($aanvraag->user_id_request);
                                         @endphp
                                         @if($aanvraag->accepted == 1)
-                                            <x-primary-button class="mt-2" type="submit">Review {{ $user->name }}</x-primary-button>
+                                            <x-primary-button class="mt-2" id="popupButton" type="submit">Review {{ $user->name }}</x-primary-button>
+                                            <form method="POST" action="{{ route('reviews.store') }}" enctype="multipart/form-data"> 
+                                                @csrf
+                                                <input type="hidden" name="user_id_request" value="{{ $user->id }}">
+                                                <div id="popup" style="display: none;">
+                                                    <input name="rating" type="number" value="1" min="1" max="5" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2">
+                                                    <textarea name="comment" placeholder="{{ __('Laat hier nog een kort berichtje achter') }}" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2">{{ old('comment') }}</textarea>
+                                                    <x-primary-button class="mt-4">{{ __('Plaats review') }}</x-primary-button>
+                                                    <x-primary-button class="mt-2" id="closePopup">Close</x-primary-button>   
+                                                </div>
+                                            </form>
                                         @endif
                                     @endforeach
                                 </div>

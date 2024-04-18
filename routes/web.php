@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +30,8 @@ Route::group(['middleware' => 'block.blocked'], function () {
     Route::resource('posts', PostController::class)
         ->only(['index', 'store', 'edit', 'update', 'destroy'])
         ->middleware(['auth', 'verified']);
+
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
     Route::post('/requests', [RequestController::class, 'store'])->name('requests.store');
     Route::delete('/requests/{user_id_request}/{post_id}', [RequestController::class, 'destroy'])->name('requests.destroy');

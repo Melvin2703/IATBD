@@ -10,11 +10,13 @@ class UserProfileController extends Controller
     public function show($id)
     {
         $user = User::find($id);
+        $reviews = $user->reviews;
+        $averageRating = $reviews->isNotEmpty() ? $reviews->avg('rating') : null;
 
         if (!$user) {
             abort(404, 'Gebruiker niet gevonden');
         }
 
-        return view('user.profile', ['user' => $user]);
+        return view('user.profile', ['user' => $user, 'averageRating' => $averageRating, 'reviews' => $reviews]);
     }
 }
