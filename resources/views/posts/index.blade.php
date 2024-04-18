@@ -19,8 +19,6 @@
                 >{{ old('description') }}</textarea>
                 <x-input-label class="mt-2 text-lg text-gray-700" for="photo" :value="__('Voeg hier een foto van uw huisdier toe.')"/>
                 <input type="file" id="photo" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2" name="image" accept="image/jpeg, image/png, image/jpg, image/gif">
-                <x-input-label class="mt-2 text-lg text-gray-700" for="video" :value="__('Voeg hier een video van uw huis toe.')"/>
-                <input type="file" id="video" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2" name="video" accept="video/*">
                 <x-input-error :messages="$errors->get('Error')" class="mt-2" />
                 
                 <script>

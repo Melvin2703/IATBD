@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id_request')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('post_id')->references('id')->on('posts')->onDelete('cascade');
             $table->foreignId('user_id_post')->references('id')->on('users')->onDelete('cascade');
-            $table->boolean('accepted');
+            $table->integer('accepted');
             $table->timestamps();
         });
     }

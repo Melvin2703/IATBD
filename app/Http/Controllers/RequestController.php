@@ -48,4 +48,16 @@ class RequestController extends Controller
     
         return redirect(route('posts.index'));
     }
+
+    public function updateAccepted($id) {
+        $aanvraag = Aanvraag::findOrFail($id);
+        $aanvraag->accepted = 1;
+        $aanvraag->save();
+
+        Aanvraag::where('post_id', $aanvraag->post_id)
+                ->where('id', '!=', $id)
+                ->update(['accepted' => 2]);
+
+        return redirect()->back()->with('success', 'Aanvraag geaccepteerd.');
+    } 
 }

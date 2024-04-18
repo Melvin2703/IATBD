@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RequestController;
+use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'block.blocked'], function () {
     Route::get('/', function () {
-        return view('welcome');
+        return view('auth/login');
     });
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -44,6 +44,10 @@ Route::group(['middleware' => 'block.blocked'], function () {
         Route::get('/admin/{user}/block', [UserController::class, 'block'])->name('admin.block');
         Route::get('/admin/{user}/admin', [UserController::class, 'admin'])->name('admin.admin');
     });
+
+    Route::get('/aanvragen/{id}/update-accepted', [RequestController::class, 'updateAccepted'])->name('update.accepted');
+
+    Route::get('/user/{id}', [UserProfileController::class, 'show'])->name('user.profile');
 });
 
 Route::view('/blocked', 'blocked')->name('blocked_page');

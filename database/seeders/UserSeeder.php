@@ -34,5 +34,13 @@ class UserSeeder extends Seeder
             'is_blocked'=> 0,
             'is_admin' => 0,
         ]);
+
+        User::create([
+            'name' => 'Max Overbeek',
+            'email' => 'max@max.max',
+            'password' => Hash::make('max'),
+            'is_blocked'=> 0,
+            'is_admin' => 0,
+        ]);
     }
 }
