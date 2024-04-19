@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post; // Import the Chirp model
+use App\Models\Post;
 use App\Models\Aanvraag;
 use Illuminate\Http\Request;
-use Illuminate\View\View; // Import the View class
+use Illuminate\View\View;
 
 class DashboardController extends Controller
 {

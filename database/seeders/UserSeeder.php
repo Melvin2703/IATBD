@@ -15,10 +15,8 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Clear existing users
         DB::table('users')->delete();
 
-        // Create a default user
         User::create([
             'name' => 'Melvin van Vliet',
             'email' => 'melvin@melvin.melvin',

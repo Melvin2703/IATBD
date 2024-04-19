@@ -1,4 +1,5 @@
 <section>
+    <script src="{{ asset('js/app.js') }}"></script>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
             {{ __('Profile Information') }}
@@ -56,30 +57,6 @@
             <x-input-label class="mt-2 text-lg text-gray-700" for="video" :value="__('Voeg hier een video van uw huis toe.')"/>
             <input type="file" id="video" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2" name="video" accept="video/*">
         </div>                
-                <script>
-                document.querySelector('form').addEventListener('submit', function(event) {
-                    const photoInput = document.getElementById('photo');
-                    const videoInput = document.getElementById('video');
-
-                    if (photoInput.files.length > 0) {
-                        const photoExtension = photoInput.files[0].name.split('.').pop().toLowerCase();
-                        if (!['jpeg', 'jpg', 'png', 'gif'].includes(photoExtension)) {
-                            event.preventDefault();
-                            alert('Fout: Ongeldig bestandstype voor foto. Toegestane types zijn: JPEG, JPG, PNG, GIF');
-                            return;
-                        }
-                    }
-                
-                    if (videoInput.files.length > 0) {
-                        const videoExtension = videoInput.files[0].name.split('.').pop().toLowerCase();
-                        if (!['mp4', 'avi', 'mov', 'wmv'].includes(videoExtension)) {
-                            event.preventDefault();
-                            alert('Fout: Ongeldig bestandstype voor video. Toegestane types zijn: MP4, AVI, MOV, WMV');
-                            return;
-                        }
-                    }
-                });
-                </script>
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
@@ -93,6 +70,7 @@
                     class="text-sm text-gray-600"
                 >{{ __('Saved.') }}</p>
             @endif
+            <a class="underline text-xl text-pink-accent hover:text-pink-accent-hover rounded-md" href="{{ route('posts.index') }}">{{ __('Annuleer') }}</a>
         </div>
     </form>
 </section>

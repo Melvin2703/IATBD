@@ -40,7 +40,7 @@ class ProfileController extends Controller
             $image = $request->file('image');
             $imageName = time().'.'.$image->extension(); 
             $image->storeAs('public/images', $imageName); 
-            $user->image = $imageName; // Update user's image field with the filename
+            $user->image = $imageName;
         }
 
         // Handle video upload
@@ -48,7 +48,7 @@ class ProfileController extends Controller
             $video = $request->file('video');
             $videoName = time().'.'.$video->extension(); 
             $video->storeAs('public/video', $videoName);
-            $user->video = $videoName; // Update user's video field with the filename
+            $user->video = $videoName;
         }
 
         $user->save();

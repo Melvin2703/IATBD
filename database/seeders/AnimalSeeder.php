@@ -17,7 +17,6 @@ class AnimalSeeder extends Seeder
     {
         DB::table('animals')->delete();
 
-        // Create a default user
         Animal::create([
             'id'=>1,
             'name'=>'Hond'

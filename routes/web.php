@@ -51,6 +51,8 @@ Route::group(['middleware' => 'block.blocked'], function () {
     Route::get('/aanvragen/{id}/update-accepted', [RequestController::class, 'updateAccepted'])->name('update.accepted');
 
     Route::get('/user/{id}', [UserProfileController::class, 'show'])->name('user.profile');
+
+    Route::get('/posts/filter', [PostController::class, 'filter'])->name('posts.filter');
 });
 
 Route::view('/blocked', 'blocked')->name('blocked_page');

@@ -1,6 +1,8 @@
 <x-app-layout>
+    <script src="{{ asset('js/app.js') }}"></script>
+    <h1 class="text-3xl text-center p-6 mt-4">Plaats hier uw nieuwe post</h1>
     <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-        <div class="mt-6 bg-turquoise-main shadow-sm rounded-lg p-6">
+        <div class="bg-turquoise-main shadow-sm rounded-lg p-6">
             <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data"> 
                 @csrf
                 <div>
@@ -20,34 +22,32 @@
                 <x-input-label class="mt-2 text-lg text-gray-700" for="photo" :value="__('Voeg hier een foto van uw huisdier toe.')"/>
                 <input type="file" id="photo" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2" name="image" accept="image/jpeg, image/png, image/jpg, image/gif">
                 <x-input-error :messages="$errors->get('Error')" class="mt-2" />
-                
-                <script>
-                document.querySelector('form').addEventListener('submit', function(event) {
-                    const photoInput = document.getElementById('photo');
-                    const videoInput = document.getElementById('video');
-
-                    if (photoInput.files.length > 0) {
-                        const photoExtension = photoInput.files[0].name.split('.').pop().toLowerCase();
-                        if (!['jpeg', 'jpg', 'png', 'gif'].includes(photoExtension)) {
-                            event.preventDefault();
-                            alert('Fout: Ongeldig bestandstype voor foto. Toegestane types zijn: JPEG, JPG, PNG, GIF');
-                            return;
-                        }
-                    }
-                
-                    if (videoInput.files.length > 0) {
-                        const videoExtension = videoInput.files[0].name.split('.').pop().toLowerCase();
-                        if (!['mp4', 'avi', 'mov', 'wmv'].includes(videoExtension)) {
-                            event.preventDefault();
-                            alert('Fout: Ongeldig bestandstype voor video. Toegestane types zijn: MP4, AVI, MOV, WMV');
-                            return;
-                        }
-                    }
-                });
-                </script>
-
                 <x-input-error :messages="$errors->get('Error')" class="mt-2" />
                 <x-primary-button class="mt-4">{{ __('Post') }}</x-primary-button>
+            </form>
+        </div>
+        <h1 class="text-3xl text-center p-6 mt-4">Filteren en sorteren</h1>
+        <div class="mt-6 bg-turquoise-main shadow-sm rounded-lg p-6">
+            <form id="filterForm" action="{{ route('posts.filter') }}" method="GET">
+                <div class="flex-1">
+                    <label for="animal_filter" class="block text-lg text-gray-700">Filter op soort dier:</label>
+                    <select id="animal_filter" name="animal" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2">
+                        <option value="">Alle dieren</option>
+                        @foreach ($animals as $animal)
+                            <option value="{{ $animal->animal }}">{{ $animal->animal }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mt-2">
+                    <label for="sort_by_date" class="block text-lg text-gray-700">Sorteer op datum:</label>
+                    <select id="sort_by_date" name="sort" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2">
+                        <option value="desc">Nieuwste eerst</option>
+                        <option value="asc">Oudste eerst</option>
+                    </select>
+                    <x-primary-button type="submit" class="mt-4">
+                        Filter
+                    </x-primary-button>
+                </div>
             </form>
         </div>
         <h1 class="text-3xl text-center p-6 mt-4">Posts</h1>

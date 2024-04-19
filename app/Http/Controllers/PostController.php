@@ -14,27 +14,39 @@ use Illuminate\View\View;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-public function index(): View
-{
-    $animals = Animal::All();
-    $posts = Post::with('user')->latest()->get();
-    $aanvragen = Aanvraag::All();
-    return view('posts.index', ['animals' => $animals, 'posts' => $posts, 'aanvragen' => $aanvragen] ); // Voeg de variabele postsForDashboard toe aan de view voor dashboard.blade.php
-}
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function index(): View
+    {
+        $animals = Animal::All();
+        $posts = Post::with('user')->latest()->get();
+        $aanvragen = Aanvraag::All();
+
+        return view('posts.index', ['animals' => $animals, 'posts' => $posts, 'aanvragen' => $aanvragen] ); 
+    }
+
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function filter(Request $request)
+    {
+        $selectedAnimal = $request->input('animal');
+        $sortByDate = $request->input('sort', 'desc');
+    
+        $query = Post::query();
+    
+        if ($selectedAnimal !== null) {
+            $query->where('animal', $selectedAnimal);
+        }
+
+        $query->orderBy('created_at', $sortByDate);
+    
+        $posts = $query->get();
+
+        $animals = Post::select('animal')->distinct()->get();
+
+        return view('posts.index', compact('posts', 'animals'));
+    }
    
      public function store(Request $request)
      {       
@@ -48,14 +60,14 @@ public function index(): View
          
          if ($request->hasFile('image')) {
              $image = $request->file('image');
-             $imageName = time().'.'.$image->extension(); // Genereer een unieke naam voor de afbeelding
-             $image->storeAs('public/images', $imageName); // Sla de afbeelding op in de opslag (bijv. public/images)
+             $imageName = time().'.'.$image->extension(); 
+             $image->storeAs('public/images', $imageName); 
          }
 
          if ($request->hasFile('video')) {
             $video = $request->file('video');
-            $videoName = time().'.'.$video->extension(); // Genereer een unieke naam voor de afbeelding
-            $video->storeAs('public/video', $videoName); // Sla de afbeelding op in de opslag (bijv. public/images)
+            $videoName = time().'.'.$video->extension(); 
+            $video->storeAs('public/video', $videoName); 
         }
      
          Post::create([
@@ -67,20 +79,14 @@ public function index(): View
              'video' => $videoName ?? null,
          ]);
      
-         return redirect(route('posts.index')); // Redirect naar waar je maar wilt na het opslaan van de post
+         return redirect(route('posts.index')); 
      }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(post $post)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Post $post): View
     {
         $animals = Animal::all();
@@ -94,9 +100,6 @@ public function index(): View
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Post $post): RedirectResponse
     {
         $this->authorize('update', $post);
@@ -111,22 +114,18 @@ public function index(): View
         if ($request->hasFile('image')) {
             Storage::delete('public/images/' . $post->image);
             $image = $request->file('image');
-            $imageName = time().'.'.$image->extension(); // Genereer een unieke naam voor de afbeelding
-    
-            // Wijs de naam van de afbeelding toe aan de 'image' sleutel in het $validated array
+            $imageName = time().'.'.$image->extension(); 
+
             $validated['image'] = $imageName;
-    
-            // Sla de afbeelding op in de opgegeven map (bijv. public/images) op de lokale schijf
+
             $image->storeAs('public/images', $imageName); 
         }
 
         if ($request->hasFile('video')) {
             Storage::delete('public/video/' . $post->video);
             $video = $request->file('video');
-            $videoName = time().'.'.$video->extension(); // Genereer een unieke naam voor de afbeelding
-            
+            $videoName = time().'.'.$video->extension();
             $validated['video'] = $videoName;
-
             $video->storeAs('public/video', $videoName);
         }
  
@@ -135,9 +134,6 @@ public function index(): View
         return redirect(route('posts.index'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Post $post): RedirectResponse
     {
         $this->authorize('delete', $post);

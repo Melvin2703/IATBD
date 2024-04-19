@@ -92,8 +92,10 @@
                                                 <div id="popup" style="display: none;">
                                                     <input name="rating" type="number" value="1" min="1" max="5" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2">
                                                     <textarea name="comment" placeholder="{{ __('Laat hier nog een kort berichtje achter') }}" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2">{{ old('comment') }}</textarea>
-                                                    <x-primary-button class="mt-4">{{ __('Plaats review') }}</x-primary-button>
-                                                    <x-primary-button class="mt-2" id="closePopup">Close</x-primary-button>   
+                                                    <div class="mt-4 space-x-2">
+                        	                            <x-primary-button class="mt-4">{{ __('Plaats review') }}</x-primary-button>
+                        	                            <a class="underline text-xl text-pink-accent hover:text-pink-accent-hover rounded-md hover:cursor-pointer" id="closePopup">Annuleer</a>
+                                                    </div>  
                                                 </div>
                                             </form>
                                         @endif
