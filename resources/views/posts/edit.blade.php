@@ -15,7 +15,31 @@
                     value="{{ old('message', $post->message) }}">
                 <textarea
                     name="description"
-                    class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2"                >{{ old('description', $post->description) }}</textarea>
+                    class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2">{{ old('description', $post->description) }}</textarea>
+                <input
+                    name="price"
+                    placeholder="{{ __('Prijs') }}"
+                    class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2"
+                    pattern="^\d*(\.\d{0,2})?$"
+                    oninput="this.value = this.value.replace(/,/g, '.')"
+                    value="{{ old('price', $post->price) }}"
+                >
+                <div class="flex mt-2">
+                    <div class="mr-2 w-full">
+                        <input
+                            type="date"
+                            name="start_date"
+                            class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm"
+                        >
+                    </div>
+                    <div class="w-full">
+                        <input
+                            type="date"
+                            name="end_date"
+                            class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm"
+                        >
+                    </div>
+                </div>
                 <input type="file" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2" name="image" accept="jpeg,png,jpg,gif">
                 <x-input-error :messages="$errors->get('message')" class="mt-2" />
                 <div class="mt-4 space-x-2">

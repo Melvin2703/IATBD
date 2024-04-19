@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Post;
@@ -33,54 +34,70 @@ class PostController extends Controller
         $selectedAnimal = $request->input('animal');
         $sortByDate = $request->input('sort', 'desc');
     
-        $query = Post::query();
+        $posts = Post::query();
     
-        if ($selectedAnimal !== null) {
-            $query->where('animal', $selectedAnimal);
+        if ($selectedAnimal !== null && $selectedAnimal !== 'all') {
+            $posts->where('animal', $selectedAnimal);
         }
-
-        $query->orderBy('created_at', $sortByDate);
     
-        $posts = $query->get();
-
-        $animals = Post::select('animal')->distinct()->get();
-
-        return view('posts.index', compact('posts', 'animals'));
+        if ($request->filled('start_date_filter') && $request->filled('end_date_filter')) {
+            $posts->whereDate('start_date', '>=', $request->input('start_date_filter'))
+                ->whereDate('end_date', '<=', $request->input('end_date_filter'));
+        }
+    
+        if ($request->filled('price_min') && $request->filled('price_max')) {
+            $posts->whereBetween('price', [$request->input('price_min'), $request->input('price_max')]);
+        }
+    
+        $posts->orderBy('created_at', $sortByDate);
+    
+        $posts = $posts->get();
+    
+        $animals = Animal::all();
+    
+        $animalsWithAll = $animals->pluck('name', 'id')->prepend('Alle dieren', 'all');
+    
+        return view('posts.index', ['animals' => $animals, 'posts' => $posts, 'animalsWithAll' => $animalsWithAll]);
     }
-   
-     public function store(Request $request)
-     {       
-         $validated = $request->validate([
-             'message' => 'required|string|max:10',
-             'animal' => 'required|string',
-             'description' => 'required|string',
-             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-             'video' => 'mimes:mp4'
-         ]);
-         
-         if ($request->hasFile('image')) {
-             $image = $request->file('image');
-             $imageName = time().'.'.$image->extension(); 
-             $image->storeAs('public/images', $imageName); 
-         }
-
-         if ($request->hasFile('video')) {
-            $video = $request->file('video');
-            $videoName = time().'.'.$video->extension(); 
-            $video->storeAs('public/video', $videoName); 
+    
+    
+    
+    
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'message' => 'required|string|max:10',
+            'animal' => 'required|string',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'start_date' => 'required|date_format:Y-m-d',
+            'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+    
+        $startDate = Carbon::parse($request->start_date);
+        $endDate = Carbon::parse($request->end_date);
+    
+        $imageName = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time().'.'.$image->extension(); 
+            $image->storeAs('public/images', $imageName); 
         }
-     
-         Post::create([
-             'message' => $request->input('message'),
-             'animal' => $request->input('animal'),
-             'description' => $request->input('description'),
-             'user_id' => Auth()->user()->id,
-             'image' => $imageName ?? null,
-             'video' => $videoName ?? null,
-         ]);
-     
-         return redirect(route('posts.index')); 
-     }
+    
+        Post::create([
+            'message' => $request->input('message'),
+            'animal' => $request->input('animal'),
+            'description' => $request->input('description'),
+            'user_id' => Auth()->user()->id,
+            'price' => $request->input('price'),
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'image' => $imageName,
+        ]);
+    
+        return redirect(route('posts.index')); 
+    }
 
     public function show(post $post)
     {
@@ -96,6 +113,9 @@ class PostController extends Controller
             'post' => $post,
             'animals' => $animals, 
             'description' => $post->description,
+            'price' => $post->price,
+            'start_date' => $post->start_date,
+            'end_date' => $post->end_date,
             'image' => $post->image,
         ]);
     }
@@ -108,6 +128,9 @@ class PostController extends Controller
             'message' => 'required|string|max:255',
             'animal' => 'required|string',
             'description' => 'required|string',
+            'price' => 'required|numeric',
+            'start_date' => 'date_format:Y-m-d',
+            'end_date' => 'date_format:Y-m-d|after_or_equal:start_date',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -119,14 +142,6 @@ class PostController extends Controller
             $validated['image'] = $imageName;
 
             $image->storeAs('public/images', $imageName); 
-        }
-
-        if ($request->hasFile('video')) {
-            Storage::delete('public/video/' . $post->video);
-            $video = $request->file('video');
-            $videoName = time().'.'.$video->extension();
-            $validated['video'] = $videoName;
-            $video->storeAs('public/video', $videoName);
         }
  
         $post->update($validated);
@@ -140,10 +155,6 @@ class PostController extends Controller
  
         if ($post->image) {
             Storage::delete('public/images/' . $post->image);
-        }
-
-        if ($post->video) {
-            Storage::delete('public/video/' . $post->video);
         }
 
         $post->delete();
