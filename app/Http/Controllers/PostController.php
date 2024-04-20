@@ -38,7 +38,7 @@ class PostController extends Controller
     
         if ($selectedAnimal !== null && $selectedAnimal !== 'all') {
             $posts->where('animal', $selectedAnimal);
-        }
+        }        
     
         if ($request->filled('start_date_filter') && $request->filled('end_date_filter')) {
             $posts->whereDate('start_date', '>=', $request->input('start_date_filter'))
@@ -59,9 +59,6 @@ class PostController extends Controller
     
         return view('posts.index', ['animals' => $animals, 'posts' => $posts, 'animalsWithAll' => $animalsWithAll]);
     }
-    
-    
-    
     
     public function store(Request $request)
     {

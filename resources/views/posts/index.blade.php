@@ -7,7 +7,7 @@
             <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data"> 
                 @csrf
                 <div>
-                    <x-input-label class="mt-4 text-lg text-grey-700" for="animal" :value="__('Wat voor een soort dier is het?')"/>
+                    <x-input-label class="text-lg text-grey-700" for="animal" :value="__('Wat voor een soort dier is het?')"/>
                     <x-input-select :options="$animals" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2"/>
                 </div>
                 <input
@@ -54,12 +54,19 @@
         <h1 class="text-3xl text-center p-6 mt-4">Posts</h1>
         <div class="mt-6 bg-turquoise-main shadow-sm rounded-lg p-6">
             <details>
-                <summary>
+                <summary class="cursor-pointer">
                     Filteren en sorteren
                 </summary>
                 <form id="filterForm" action="{{ route('posts.filter') }}" method="GET">
                     <div class="mt-2">
-                        <label for="sort_by_date" class="block text-lg text-gray-700">Sorteer op datum:</label>
+                        <label for="animal_filter" class="block text-lg text-gray-700">Filter op soort dier:</label>
+                        <select id="animal_filter" name="animal" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2">
+                            <option value="">Alle dieren</option>
+                            @foreach ($animals as $animal)
+                                <option value="{{ $animal->name }}">{{ $animal->name }}</option>
+                            @endforeach
+                        </select>
+                        <label for="sort_by_date" class="block text-lg text-gray-700 mt-2">Sorteer op datum:</label>
                         <select id="sort_by_date" name="sort" class="block w-full bg-turquoise-base border-turquoise-base focus:border-turquoise-base focus:ring focus:ring-turquoise-base focus:ring-opacity-50 rounded-md shadow-sm mt-2">
                             <option value="desc">Nieuwste eerst</option>
                             <option value="asc">Oudste eerst</option>
