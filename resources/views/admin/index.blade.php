@@ -75,14 +75,11 @@
                     <p class="mt-2 text-lg text-gray-900">Soort huisdier: {{ $post->animal }}</p>
                     <p class="text-lg text-gray-900">Naam: {{ $post->message }}</p>
                     <p class="text-lg text-gray-900">Beschrijving: {{ $post->description }}</p>
+                    <p class="text-lg text-gray-900">Prijs per uur: €{{ $post->price }}</p>
+                    <p class="text-lg text-gray-900">Startdatum: {{ $post->start_date->format('d M Y') }}</p>
+                    <p class="text-lg text-gray-900">Einddatum: {{ $post->end_date->format('d M Y') }}</p>
                     @unless($post->image == null)
                         <img class="mt-2" src="{{ asset('storage/images/' . $post->image) }}" alt="Animal Image">
-                    @endunless
-                    @unless($post->video == null)
-                        <video class="mt-2" controls>
-                            <source src="{{ asset('storage/video/' . $post->video) }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
                     @endunless
                 </div>
             </div>

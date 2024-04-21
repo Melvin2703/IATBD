@@ -1,7 +1,7 @@
 <x-app-layout>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.4/nouislider.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.4/nouislider.min.js"></script>
-    <h1 class="text-3xl text-center p-6 mt-4">Plaats hier uw nieuwe post</h1>
+    <h1 class="text-3xl text-center p-6 mt-4">Maak hier uw nieuwe post</h1>
     <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
         <div class="bg-turquoise-main shadow-sm rounded-lg p-6">
             <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data"> 
